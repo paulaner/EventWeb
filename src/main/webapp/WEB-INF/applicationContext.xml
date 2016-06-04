@@ -10,20 +10,14 @@
     <context:component-scan base-package="com.gzhou.eventing">
     </context:component-scan>
 
-    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
-        <property name="maxTotal" value="1000" />
-        <property name="maxIdle" value="10" />
-        <property name="maxWaitMillis" value="30000" />
-        <property name="minIdle" value="1" />
+    <bean id="mQConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="tcp://107.170.91.243:61616" />
+        <property name="userName" value="admin" />
+        <property name="password" value="admin" />
     </bean>
 
-    <bean id="jedisPool" class="redis.clients.jedis.JedisPool">
-        <constructor-arg index="0" ref="jedisPoolConfig" />
-        <constructor-arg index="1" value="107.170.124.118" />
-        <constructor-arg index="2" value="6379" />
-    </bean>
-
-    <bean id="redisUtil" class="com.gzhou.eventing.util.RedisUtil">
-        <property name="jedisPoolConfig" ref="jedisPoolConfig" />
+    <bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
+        <constructor-arg ref="mQConnectionFactory" />
+        <property name="sessionCacheSize" value="100" />
     </bean>
 </beans>
